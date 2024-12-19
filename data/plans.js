@@ -1,0 +1,60 @@
+const availablePlans = [
+  {
+    planName: "A",
+    USDT: 30,
+    STAR: 300,
+    usdtToReceive: 68,
+    starToReceive: 680,
+    durationInDays: 30,
+  },
+  {
+    planName: "B",
+    USDT: 80,
+    STAR: 800,
+    usdtToReceive: 185,
+    starToReceive: 1850,
+    durationInDays: 30,
+  },
+  {
+    planName: "C",
+    USDT: 150,
+    STAR: 1500,
+    usdtToReceive: 372,
+    starToReceive: 3720,
+    durationInDays: 35,
+  },
+  {
+    planName: "D",
+    USDT: 200,
+    STAR: 2000,
+    usdtToReceive: 495,
+    starToReceive: 4950,
+    durationInDays: 40,
+  },
+  {
+    planName: "E",
+    USDT: 500,
+    STAR: 5000,
+    usdtToReceive: 1125,
+    starToReceive: 11250,
+    durationInDays: 60,
+  },
+  {
+    planName: "F",
+    USDT: 1000,
+    STAR: 10000,
+    usdtToReceive: 2320,
+    starToReceive: 23200,
+    durationInDays: 65,
+  },
+  {
+    planName: "G",
+    USDT: 12,
+    STAR: 120,
+    usdtToReceive: 33,
+    starToReceive: 330,
+    durationInDays: 30,
+  },
+];
+
+module.exports = availablePlans;
