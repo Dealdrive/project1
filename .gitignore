@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-# /ffmpeg-2024-10-21-git-baa23e40c1-essentials_build
+/ffmpeg-2024-10-21-git-baa23e40c1-essentials_build
 /ffmpeg-7.1
 /starface_backend-main
 /.pnp
