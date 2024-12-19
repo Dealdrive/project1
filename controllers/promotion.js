@@ -164,7 +164,6 @@ const getRandomPromotionByLocation = async (req, res) => {
 
 const getAllPromotions = async (req, res) => {
   const { userId } = req.userData;
-  const { status } = req.query;
   try {
     // Fetch user details to determine location
     const user = await User.findById(userId);

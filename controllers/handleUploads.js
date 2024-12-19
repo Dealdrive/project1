@@ -5,6 +5,7 @@ const FileUpload = require("../models/FileUpload");
 const User = require("../models/User");
 const mkdirp = require("mkdirp");
 const Cloudinary = require("../utils/cloudinayConfig");
+const Promotion = require("../models/Promotion");
 
 // Function to upload a file to Cloudinary
 const uploadToCloudinary = async (filePath, folder) => {
@@ -521,7 +522,7 @@ const getAllPost = async (req, res) => {
               input: "$comments",
               as: "comment",
               in: {
-                user: "$$comment.user", // Retain user ID
+                user: "$$comment.user",
                 userName: "$$comment.userName",
                 comment: "$$comment.comment",
                 avatar: {
@@ -557,6 +558,12 @@ const getAllPost = async (req, res) => {
 
     // Count the total number of documents
     const totalPosts = await FileUpload.countDocuments();
+
+    // Update status of expired promotions
+    await Promotion.updateMany(
+      { status: "active", endDate: { $lt: new Date() } },
+      { $set: { status: "completed" } }
+    );
 
     res.status(200).json({
       posts,
