@@ -163,19 +163,19 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("joinReelRoom", (reelId) => {
-    socket.join(reelId);
-    console.log(`User joined reel room: ${reelId}`);
+  socket.on("joinPostRoom", (postId) => {
+    socket.join(postId);
+    console.log(`User joined post room: ${postId}`);
   }); // Event for joining a user-specific room
 
-  socket.on("joinUploadReelsRoom", (userId) => {
+  socket.on("joinUploadPostsRoom", (userId) => {
     socket.join(userId); // Join a room named after the userId
     console.log(`User ${userId} joined room`);
   });
 
-  socket.on("leaveReelRoom", (reelId) => {
-    socket.leave(reelId);
-    console.log(`User left reel room: ${reelId}`);
+  socket.on("leavePostRoom", (postId) => {
+    socket.leave(postId);
+    console.log(`User left post room: ${postId}`);
   });
 
   // Handle WebRTC signaling events

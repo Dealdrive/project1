@@ -3,62 +3,62 @@ const User = require("../models/User");
 
 const postsActionContainer = (io) => {
   const likePost = async (req, res) => {
-    const { reelId } = req.params;
+    const { postId } = req.params;
     const { userId } = req.userData;
     const { action } = req.body;
 
     try {
-      const reel = await FileUpload.findById(reelId);
-      if (!reel) {
+      const post = await FileUpload.findById(postId);
+      if (!post) {
         return res.status(404).json({ message: "File not found" });
       }
 
-      const hasLiked = reel.likedBy.includes(userId);
+      const hasLiked = post.likedBy.includes(userId);
 
       if (action === "like") {
         if (hasLiked) {
           return res
             .status(400)
-            .json({ message: "User has already liked this reel" });
+            .json({ message: "User has already liked this post" });
         }
-        reel.likes += 1;
-        reel.likedBy.push(userId);
+        post.likes += 1;
+        post.likedBy.push(userId);
       } else if (action === "unlike") {
         if (!hasLiked) {
           return res
             .status(400)
-            .json({ message: "User has not liked this reel yet" });
+            .json({ message: "User has not liked this post yet" });
         }
-        reel.likes -= 1;
-        reel.likedBy = reel.likedBy.filter((id) => id.toString() !== userId);
+        post.likes -= 1;
+        post.likedBy = post.likedBy.filter((id) => id.toString() !== userId);
       }
 
-      await reel.save();
+      await post.save();
 
-      // Emit the updated reel data
-      io.to(reelId.toString()).emit("reelUpdated", {
-        reelId,
-        updatedData: { likes: reel.likes, likedBy: reel.likedBy },
+      // Emit the updated post data
+      io.to(postId.toString()).emit("postUpdated", {
+        postId,
+        updatedData: { likes: post.likes, likedBy: post.likedBy },
       });
 
       res.status(200).json({
         message: "File updated successfully",
-        likes: reel.likes,
-        likedBy: reel.likedBy,
+        likes: post.likes,
+        likedBy: post.likedBy,
       });
     } catch (err) {
-      console.error("Error liking/unliking reel:", err);
+      console.error("Error liking/unliking post:", err);
       res.status(500).json({ message: "Error processing your request" });
     }
   };
 
   const sharePost = async (req, res) => {
-    const { reelId } = req.params;
+    const { postId } = req.params;
     const { userId } = req.userData;
 
     try {
-      const reel = await FileUpload.findById(reelId);
-      if (!reel) {
+      const post = await FileUpload.findById(postId);
+      if (!post) {
         return res.status(404).json({ message: "File not found" });
       }
 
@@ -67,76 +67,76 @@ const postsActionContainer = (io) => {
         return res.status(404).json({ message: "User not found" });
       }
 
-      if (reel.sharedBy.includes(userId)) {
+      if (post.sharedBy.includes(userId)) {
         return res
           .status(400)
-          .json({ message: "User has already shared this reel" });
+          .json({ message: "User has already shared this post" });
       }
 
-      reel.shares += 1;
-      reel.sharedBy.push(userId);
-      user.sharedPosts.push(reelId);
+      post.shares += 1;
+      post.sharedBy.push(userId);
+      user.sharedPosts.push(postId);
 
-      await reel.save();
+      await post.save();
       await user.save();
 
-      // Emit the updated reel data
-      io.to(reelId.toString()).emit("reelUpdated", {
-        reelId,
-        updatedData: { shares: reel.shares, sharedBy: reel.sharedBy },
+      // Emit the updated post data
+      io.to(postId.toString()).emit("postUpdated", {
+        postId,
+        updatedData: { shares: post.shares, sharedBy: post.sharedBy },
       });
 
       res.status(200).json({
         message: "File shared successfully",
-        shares: reel.shares,
-        sharedBy: reel.sharedBy,
+        shares: post.shares,
+        sharedBy: post.sharedBy,
       });
     } catch (err) {
-      console.error("Error sharing reel:", err);
+      console.error("Error sharing post:", err);
       res.status(500).json({ message: "Error processing your request" });
     }
   };
 
   const reactToPost = async (req, res) => {
-    const { reelId } = req.params;
+    const { postId } = req.params;
     const { reactionType } = req.body;
 
     try {
-      const reel = await FileUpload.findById(reelId);
-      if (!reel) {
+      const post = await FileUpload.findById(postId);
+      if (!post) {
         return res.status(404).json({ message: "File not found" });
       }
 
-      if (!reel.reactions.has(reactionType)) {
+      if (!post.reactions.has(reactionType)) {
         return res.status(400).json({ message: "Invalid reaction type" });
       }
 
-      reel.reactions.set(reactionType, reel.reactions.get(reactionType) + 1);
+      post.reactions.set(reactionType, post.reactions.get(reactionType) + 1);
 
-      await reel.save();
-      // Emit the updated reel data
-      io.to(reelId.toString()).emit("reelUpdated", {
-        reelId,
-        updatedData: { reactions: reel.reactions },
+      await post.save();
+      // Emit the updated post data
+      io.to(postId.toString()).emit("postUpdated", {
+        postId,
+        updatedData: { reactions: post.reactions },
       });
       res.status(200).json({
         message: `Reacted with ${reactionType}`,
-        reactions: reel.reactions,
+        reactions: post.reactions,
       });
     } catch (err) {
-      console.error("Error reacting to reel:", err);
+      console.error("Error reacting to post:", err);
       res.status(500).json({ message: "Error processing your request" });
     }
   };
 
   const addCommentToPost = async (req, res) => {
-    const { reelId } = req.params;
+    const { postId } = req.params;
     const { userId } = req.userData;
     const { comment } = req.body;
 
     try {
-      const reel = await FileUpload.findById(reelId);
-      if (!reel) {
+      const post = await FileUpload.findById(postId);
+      if (!post) {
         return res.status(404).json({ message: "File not found" });
       }
 
@@ -144,16 +144,16 @@ const postsActionContainer = (io) => {
       const userName = user.userName;
       const avatar = user.profilePicture;
 
-      reel.comments.push({ user: userId, userName, avatar, comment });
-      await reel.save();
+      post.comments.push({ user: userId, userName, avatar, comment });
+      await post.save();
 
-      // Emit the updated reel data
-      io.to(reelId.toString()).emit("reelUpdated", {
-        reelId,
-        updatedData: { comments: reel.comments },
+      // Emit the updated post data
+      io.to(postId.toString()).emit("postUpdated", {
+        postId,
+        updatedData: { comments: post.comments },
       });
 
-      res.status(201).json({ message: "Comment added successfully", reel });
+      res.status(201).json({ message: "Comment added successfully", post });
     } catch (err) {
       console.error("Error adding comment:", err);
       res.status(500).json({ message: "Error adding comment" });
