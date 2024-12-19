@@ -7,6 +7,7 @@ const FileUploadSchema = new mongoose.Schema({
   title: { type: String },
   description: { type: String },
   postType: { type: String },
+  promoted: { type: Boolean, default: false },
   file: [
     {
       filename: String,

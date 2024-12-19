@@ -60,6 +60,9 @@ const promotePost = async (req, res) => {
 
     await promotion.save();
 
+    post.promoted = true;
+    await post.save();
+
     const adminWallet = await Wallet.findOne({ userId: adminId });
     const adminAssetWalletDetail = adminWallet.wallets.find(
       (w) => w.currency === asset.toUpperCase()
