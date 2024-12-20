@@ -144,7 +144,7 @@ const postsActionContainer = (io) => {
       const userName = user.userName;
       const avatar = user.profilePicture;
 
-      post.comments.push({ user: userId, userName, avatar, comment });
+      post.comments.push({ user: userId, userName, avartar: avatar, comment });
       await post.save();
 
       // Emit the updated post data
